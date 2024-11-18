@@ -36,18 +36,18 @@ void Indicate_Error(){
   digitalWrite(INDICATOR_LED_PIN, HIGH);
 }
 
-void initSerial(){
+void Initial_Serial(){
   Serial.begin(9600);
   Serial.println(("\n\nHello!\n From MEOW GROUP!"));
 }
 
-void initGPIOPin(){
+void Initial_GPIOPin(){
   pinMode(LED_CTL_PIN_1, OUTPUT);
   pinMode(INDICATOR_LED_PIN, OUTPUT);
   pinMode(LED_CTL_PIN_2, OUTPUT);
 }
 
-void initWifi(){
+void Initial_Wifi(){
   Serial.println("Connecting to Wi-fi");
   WiFi.begin(WIFI_SSID, WIFI_PWD);
   while (WiFi.status() != WL_CONNECTED) {
@@ -57,7 +57,7 @@ void initWifi(){
   Serial.println("Connected to Wi-fi");
 }
 
-void initFirebase() {
+void Initial_Firebase() {
   Serial.println("Connecting to Firebase...");
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
@@ -119,11 +119,11 @@ void Update_Sensor_Data(){
 }
 
 void setup(){
-  initSerial();
-  initGPIOPin();
+  Initial_Serial();
+  Initial_GPIOPin();
   dht.begin();
-  initWifi();
-  initFirebase();
+  Initial_Wifi();
+  Initial_Firebase();
 }
 
 void loop(){
