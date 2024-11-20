@@ -1,5 +1,3 @@
-//refs: https://randomnerdtutorials.com/esp32-firebase-realtime-database/
-
 #define WIFI_SSID "rm.note.11"
 #define WIFI_PWD "nGXXFUS@3204"
 #include "WiFi.h"
@@ -14,6 +12,7 @@ DHT dht(DHT_DAT_PIN, DHTTYPE);
 #include "FirebaseESP32.h"
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
+
 FirebaseData firebaseData;
 String path = "/";
 FirebaseAuth auth;
@@ -28,33 +27,52 @@ struct SENSOR_DATA{
   float humid;
 } sensor_data;
 
-void Indicate_Error(){
+// Codes:
+// 0x0: Read data from sensor
+// 0x1: wifi error
+// 0x2: Firebase error
+void Set_Indicator_Flag(int err_code = 0){
   // Blink led to noti error
-  digitalWrite(INDICATOR_LED_PIN, LOW); delay(100);
-  digitalWrite(INDICATOR_LED_PIN, HIGH); delay(100);
-  digitalWrite(INDICATOR_LED_PIN, LOW); delay(100);
-  digitalWrite(INDICATOR_LED_PIN, HIGH);
+  switch (err_code){
+    case 0x0: err_code = 1; break;
+    case 0x1: err_code = 2; break;
+    case 0x2: err_code = 3; break;
+    default:  err_code = 0;
+  }
+  while(err_code--){
+    digitalWrite(INDICATOR_LED_PIN, LOW); delay(100);
+    digitalWrite(INDICATOR_LED_PIN, HIGH); delay(200);
+    digitalWrite(INDICATOR_LED_PIN, LOW); delay(100);
+  }
 }
 
 void Initial_Serial(){
   Serial.begin(9600);
-  Serial.println(("\n\nHello!\n From MEOW GROUP!"));
+  Serial.println(("\n\nHello!\nFrom MEOW GROUP!"));
 }
 
-void Initial_GPIOPin(){
+void Initial_GPIO_Pin(){
   pinMode(LED_CTL_PIN_1, OUTPUT);
   pinMode(INDICATOR_LED_PIN, OUTPUT);
   pinMode(LED_CTL_PIN_2, OUTPUT);
 }
 
-void Initial_Wifi(){
-  Serial.println("Connecting to Wi-fi");
-  WiFi.begin(WIFI_SSID, WIFI_PWD);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+bool WiFi_Is_Connected(){
+  if(WiFi.status() != WL_CONNECTED){
+      Set_Indicator_Flag(0x1);
+      Serial.println("No Wi-Fi connection!");
+      return false;
   }
-  Serial.println("Connected to Wi-fi");
+  return true;
+}
+
+void Initial_Wifi(){
+  WiFi.begin(WIFI_SSID, WIFI_PWD);
+  do{
+    Serial.println("Connecting to Wi-fi...");
+    delay(2000);
+  }while(!WiFi_Is_Connected());
+  Serial.println("Connected to Wi-fi!");
 }
 
 void Initial_Firebase() {
@@ -78,19 +96,19 @@ void Initial_Firebase() {
 }
 
 void Firebase_Sync(){
+  if(WiFi_Is_Connected() == false) return;
   // Sync sensor data
   if(
     !Firebase.setString(firebaseData, "Temp", String(sensor_data.temp))
     || !Firebase.setString(firebaseData, "Humid", String(sensor_data.humid))
   ){
     Serial.println("Failed to sync to Firebase!");
-    Indicate_Error();
+    Set_Indicator_Flag(0x2);
   }
 }
 
 void Update_Sensor_Data(){
-  // Turn-on indicator light
-  digitalWrite(INDICATOR_LED_PIN, HIGH);
+  Set_Indicator_Flag(0x0);
   // Wait 4 seconds for DHT sensor
   delay(4000);
   // Read humid and temp from dht sensor
@@ -100,7 +118,7 @@ void Update_Sensor_Data(){
   if( isnan(t) || isnan(h) ){
         // Send Error msg to serial
         Serial.println("DHT11 - E: Corrupted data!");
-        Indicate_Error();
+        Set_Indicator_Flag();
       }else{
       // Send Temp + Humid data to serial
       Serial.println("Temp: ");
@@ -114,13 +132,11 @@ void Update_Sensor_Data(){
       Firebase_Sync();
 
     }
-  // Turn-off indicator light
-  digitalWrite(INDICATOR_LED_PIN, LOW);
 }
 
 void setup(){
   Initial_Serial();
-  Initial_GPIOPin();
+  Initial_GPIO_Pin();
   dht.begin();
   Initial_Wifi();
   Initial_Firebase();
@@ -130,3 +146,4 @@ void loop(){
   Update_Sensor_Data();
   delay(1000);
 }
+
