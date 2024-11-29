@@ -1,22 +1,4 @@
-#define WIFI_SSID "rm.note.11"
-#define WIFI_PWD "nGXXFUS@3204"
-#include "WiFi.h"
 
-#define DHTTYPE DHT11
-#define DHT_DAT_PIN 21
-#include <DHT.h>
-DHT dht(DHT_DAT_PIN, DHTTYPE);
-
-#define DATABASE_URL "https://lab3-itfa-default-rtdb.firebaseio.com/"
-#define API_KEY "AIzaSyBMq4aT1Jx6nICW4yuYtTSIU9QSzIa1vmk"
-#include "FirebaseESP32.h"
-#include "addons/TokenHelper.h"
-#include "addons/RTDBHelper.h"
-
-FirebaseData firebaseData;
-String path = "/";
-FirebaseAuth auth;
-FirebaseConfig config;
 
 #define LED_CTL_PIN_1 21
 #define INDICATOR_LED_PIN 23
@@ -79,6 +61,8 @@ void Initial_Firebase() {
   Serial.println("Connecting to Firebase...");
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
+  auth.user.email = "itfa-name@lab3-itfa.iam.gserviceaccount.com";
+  auth.user.password = "nGXXFUS@3204";
   while(0x1)
     // sign-up as anonymous
     if(Firebase.signUp(&config, &auth, "", "")){
@@ -90,7 +74,7 @@ void Initial_Firebase() {
       Serial.println(config.signer.signupError.message.c_str());
       Serial.println("Re-try...");
     }
-  config.token_status_callback = tokenStatusCallback;
+  // config.token_status_callback = tokenStatusCallback;
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 }
