@@ -46,19 +46,9 @@ void firebase_init() {
     config.database_url = DATABASE_URL;
     auth.user.email = EMAIL;
     auth.user.password = PASSWORD;
-    while(0x1)
-        // sign-up as anonymous
-        if(Firebase.signUp(&config, &auth, "", "")){
-            msg2ser("Connected to Firebase!");
-        break;
-        }else{
-        msg2ser("Failed to connect to Firebase!");
-        Serial.print("E:");
-        msg2ser(config.signer.signupError.message.c_str());
-        msg2ser("Re-try...");
-        }
-    // config.token_status_callback = tokenStatusCallback;
-    Firebase.begin(&config, &auth);
+    do Firebase.begin(&config, &auth);
+    while(!Firebase.ready());
+    msg2ser("Connected to Firebase!");
     Firebase.reconnectWiFi(true);
 }
 
@@ -73,6 +63,7 @@ bool firebase_upload(SENSOR_DATA data){
         set_indicator(0x2);
         return false;
     }
+    Firebase.getString(firebaseData, "Temp");
     return true;
 }
 

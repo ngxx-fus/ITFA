@@ -377,27 +377,14 @@ void Initial_Wifi(){
 }
 
 void Initial_Firebase() {
-  Serial.println("Connecting to Firebase...");
-
+  msg2ser("Connecting to Firebase...");
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
-
   auth.user.email = EMAIL;
   auth.user.password = PASSWORD;
-
-  while(0x1)
-    // sign-up as anonymous
-    if(Firebase.signUp(&config, &auth, "", "")){
-      Serial.println("Connected to Firebase!");
-      break;
-    }else{
-      Serial.println("Failed to connect to Firebase!");
-      Serial.print("E:");
-      Serial.println(config.signer.signupError.message.c_str());
-      Serial.println("Re-try...");
-    }
-  // config.token_status_callback = tokenStatusCallback;
-  Firebase.begin(&config, &auth);
+  do Firebase.begin(&config, &auth);
+  while(!Firebase.ready());
+  msg2ser("Connected to Firebase!");
   Firebase.reconnectWiFi(true);
 }
 
