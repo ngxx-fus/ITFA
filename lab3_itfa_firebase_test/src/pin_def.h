@@ -7,13 +7,14 @@
 #define DEV_0_PIN 12
 #define DEV_1_PIN 13
 
+
 // Codes:
 // 0x0: Read data from sensor
 // 0x1: DHT Received data corrupted
 // 0x2: WiFi error
 // 0x3: Database connection error
 // 0x4: Speed direction error 
-void Set_Indicator_Flag(int err_code = 0){
+void set_indicator(int err_code = 0){
   // Blink led to noti error
   switch (err_code){
     case 0x0: err_code = 1; break;
