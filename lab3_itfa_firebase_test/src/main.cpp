@@ -30,10 +30,10 @@
 
 #define DATABASE_URL "https://this-is-a-test-a0f7d-default-rtdb.firebaseio.com/"
 #define API_KEY "AIzaSyDNSbmHmGsDEip7-m6zFJKe9TZ5d56bjDs"
-#define EMAIL "hehe-470@this-is-a-test-a0f7d.iam.gserviceaccount.com"
-#define PASSWORD "nGXXFUS@3204"
 
 #include "FirebaseESP32.h"
+#include "addons/TokenHelper.h"
+#include "addons/RTDBHelper.h"
 
 FirebaseData firebaseData;
 FirebaseAuth auth;
@@ -48,9 +48,6 @@ void setup(){
 
     config.api_key = API_KEY;
     config.database_url = DATABASE_URL;
-
-    auth.user.email = EMAIL;
-    auth.user.password = PASSWORD;
 
     Firebase.signUp(&config, &auth, "", "");
     
@@ -71,5 +68,4 @@ void loop(){
     delay(1000);
     if(!Firebase.setString(firebaseData, "TEST_ADDR", "TEST_VALUE"))
         Serial.println("Uload: e");
-    Firebase.setInt(firebaseData, "/path", 23)
 }

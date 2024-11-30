@@ -124,19 +124,6 @@ Then set-up Wi-Fi connection:
 #define WIFI_PWD "your Wi-Fi password"
 #include "WiFi.h"
 ```
-To check Wi-Fi connection, you can use ```WiFi.status()```, this function return some code with enum formed:
-```
-typedef enum {
-    WL_NO_SHIELD        = 255,   
-    WL_IDLE_STATUS      = 0,
-    WL_NO_SSID_AVAIL    = 1,
-    WL_SCAN_COMPLETED   = 2,
-    WL_CONNECTED        = 3,
-    WL_CONNECT_FAILED   = 4,
-    WL_CONNECTION_LOST  = 5,
-    WL_DISCONNECTED     = 6
-} wl_status_t;
-```
 For re-use or easier in fix bug, share code, ..., i rcm you define some macro:
 ```
 #define DATABASE_URL "Firebase URL"
@@ -161,6 +148,23 @@ Next, set value for ```config``` object:
 ```
 config.api_key = API_KEY;
 config.database_url = DATABASE_URL;
+```
+Before Sign-up to Firebase, you must connect to Wi-Fi via the command:
+```
+WiFi.begin(WIFI_SSID, WIFI_PWD);
+```
+To check Wi-Fi connection, you can use ```WiFi.status()```, this function return a code with enum formed:
+```
+typedef enum {
+    WL_NO_SHIELD        = 255,   
+    WL_IDLE_STATUS      = 0,
+    WL_NO_SSID_AVAIL    = 1,
+    WL_SCAN_COMPLETED   = 2,
+    WL_CONNECTED        = 3,
+    WL_CONNECT_FAILED   = 4,
+    WL_CONNECTION_LOST  = 5,
+    WL_DISCONNECTED     = 6
+} wl_status_t;
 ```
 Sign-up to Firebase using ```Firebase.signUp```, this method return ```true``` if the progress is successful, ```false``` otherwise.
 ```
@@ -199,5 +203,51 @@ And so on with other datatype.
 
 ## Full code (Simple Version)
 ```
+#include <Arduino.h>
 
+#define WIFI_SSID "rm.note.11"
+#define WIFI_PWD "nGXXFUS@3204"
+#include "WiFi.h"
+
+#define DATABASE_URL "https://this-is-a-test-a0f7d-default-rtdb.firebaseio.com/"
+#define API_KEY "AIzaSyDNSbmHmGsDEip7-m6zFJKe9TZ5d56bjDs"
+
+#include "FirebaseESP32.h"
+#include "addons/TokenHelper.h"
+#include "addons/RTDBHelper.h"
+
+FirebaseData firebaseData;
+FirebaseAuth auth;
+FirebaseConfig config;
+
+
+void setup(){
+    Serial.begin(115200);
+    Serial.println("Hello from ESP32!");
+
+    WiFi.begin(WIFI_SSID, WIFI_PWD);
+
+    config.api_key = API_KEY;
+    config.database_url = DATABASE_URL;
+
+    Firebase.signUp(&config, &auth, "", "");
+    
+    config.token_status_callback = tokenStatusCallback;
+    
+    Firebase.begin(&config, &auth);
+
+    Firebase.reconnectWiFi(true);
+
+    //TEST
+    Serial.printf(config.signer.signupError.message.c_str());
+    Serial.printf("Setup done!");
+
+}
+
+void loop(){
+    Serial.printf("loading");
+    delay(1000);
+    if(!Firebase.setString(firebaseData, "TEST_ADDR", "TEST_VALUE"))
+        Serial.println("Uload: e");
+}
 ```
