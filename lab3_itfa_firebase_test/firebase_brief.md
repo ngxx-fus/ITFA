@@ -2,7 +2,7 @@
 You can set-up your FirebaseRealtime in serveral steps below:
 ### Step-0 Sign-up
 Go to the [link: https://console.firebase.google.com](https://console.firebase.google.com) and login.
-![img](imgs\image.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image.png?raw=true)
 ### Step-1 Create new project
 ![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image.png?raw=true)
 Enter your project name.
@@ -61,7 +61,19 @@ To access (R\W) to your resouce for a specified user using uid (optional):
 You have set-up your Realtime Firebase.
 
 ## How to push a data from ESP32 to the Realtime Firebase you have set-up?
-### Step-0 install dependencies (lib)
+### Step-0 Get Firebase Credentials
+Before go to Step-1, you must copy some credential informations.
+#### DATABASE_URL
+In tag Build/Realtime Database choose **Data** tab, then copy the URL.
+![inmg](.\imgs\image17.png)
+#### API_KEY
+From Project Overview tag, select ⚙️ then select **Project settings**
+![inmg](.\imgs\image18.png)
+At tab **General**, copy **Web API key**.
+![inmg](.\imgs\image19.png)
+(This API Key in the picture will be unusable :v bcz the project will be deleted after i make this guide.)
+
+### Step-1 install dependencies (lib)
 If you are using PlatfromIO, append the setting bellow into ```lib_deps``` in **platformio.ini** file to install .
 ```
     mobizt/Firebase ESP32 Client@^4.4.14
@@ -96,7 +108,7 @@ NOTE: **platformio.ini** is PlatformIO Project Configuration file, for more deta
 <br>
 <br>If you are using Arduino IDE, find the lib named **"Firebase ESP32 Client"**. Then Google how to set-up, i don't know :v Normally, the steps and libs is same.
 
-### Step-1 coding yeah yeah
+### Step-2 coding yeah yeah
 I will divide into 2 catagories, the first for set-up and connect to Realtime Firebase (only run at start-up), and the last one is run to upload data.
 #### Set-up and Connect
 
@@ -107,6 +119,58 @@ Then set-up Wi-Fi connection:
 #define WIFI_SSID "your Wi-Fi name (SSID)"
 #define WIFI_PWD "your Wi-Fi password"
 #include "WiFi.h"
-
 ```
-
+To check Wi-Fi connection, you can use ```WiFi.status()```, this function return some code with enum formed:
+```
+typedef enum {
+    WL_NO_SHIELD        = 255,   
+    WL_IDLE_STATUS      = 0,
+    WL_NO_SSID_AVAIL    = 1,
+    WL_SCAN_COMPLETED   = 2,
+    WL_CONNECTED        = 3,
+    WL_CONNECT_FAILED   = 4,
+    WL_CONNECTION_LOST  = 5,
+    WL_DISCONNECTED     = 6
+} wl_status_t;
+```
+For re-use or easier in fix bug, share code, ..., i rcm you define some macro:
+```
+#define DATABASE_URL "Firebase URL"
+#define API_KEY "Web API Key"
+```
+Include Firebase header
+```
+#include "FirebaseESP32.h"
+```
+Include Firebase header (for get sendback-token, bcz of using ```Sign-in Method/Anonymous```)
+```
+#include "addons/TokenHelper.h"
+#include "addons/RTDBHelper.h"
+```
+Next, you need to make three objects: config, auth, firebaseData
+```
+FirebaseData firebaseData;
+FirebaseAuth auth;
+FirebaseConfig config;
+```
+Next, set value for ```config``` object:
+```
+config.api_key = API_KEY;
+config.database_url = DATABASE_URL;
+```
+Sign-in to Firebase using ```Firebase.signUp```, this method return ```true``` if the connection is successful, ```false``` otherwise.
+```
+Firebase.signUp(&config, &auth, "", "");
+```
+After signed-in, Firebase will sendback the token stored in ```tokenStatusCallback```, you need set this token into **config** object.
+```
+config.token_status_callback = tokenStatusCallback;
+```
+Then start Firebase
+```
+Firebase.begin(&config, &auth);
+```
+One more step, set auto-connect Wi-Fi
+```
+Firebase.reconnectWiFi(true);
+```

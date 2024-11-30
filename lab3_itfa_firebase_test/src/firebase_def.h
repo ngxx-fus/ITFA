@@ -22,8 +22,8 @@
 // #define PASSWORD "nGXXFUS@3204"
 
 #include "FirebaseESP32.h"
-// #include "addons/TokenHelper.h"
-// #include "addons/RTDBHelper.h"
+#include "addons/TokenHelper.h"
+#include "addons/RTDBHelper.h"
 
 FirebaseData firebaseData;
 FirebaseAuth auth;
@@ -56,7 +56,7 @@ void firebase_init() {
     while(0x1)
         // sign-up as anonymous
         if(Firebase.signUp(&config, &auth, "", "")){
-        msg2ser("Connected to Firebase!");
+            msg2ser("Connected to Firebase!");
         break;
         }else{
         msg2ser("Failed to connect to Firebase!");
