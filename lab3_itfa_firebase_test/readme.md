@@ -1,6 +1,6 @@
 ## Hardware Specs
 Board: DOIT ESP32 DEVKIT V1
-![pinout](imgs\board_pinout.png)
+![pinout](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/board_pinout.png?raw=true)
 
 ## How to setup RealtimeFirebase?
 You can set-up your FirebaseRealtime in serveral steps below:
