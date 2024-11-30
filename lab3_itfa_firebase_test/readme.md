@@ -257,4 +257,4 @@ void loop(){
 ```
 
 Result:
-![res](.\imgs\demo.png)
+![res](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/demo.png?raw=true)
