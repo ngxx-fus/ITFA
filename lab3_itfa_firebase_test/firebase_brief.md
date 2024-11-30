@@ -4,37 +4,37 @@ You can set-up your FirebaseRealtime in serveral steps below:
 Go to the [link: https://console.firebase.google.com](https://console.firebase.google.com) and login.
 ![img](imgs\image.png)
 ### Step-1 Create new project
-![alt text](imgs\image1.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image.png?raw=true)
 Enter your project name.
-![alt text](imgs\image2.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image1.png?raw=true)
 Continue
-![alt text](imgs\image3.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image3.png?raw=true)
 Choose Default Account for Firebase
-![alt text](imgs\image4.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image4.png?raw=true)
 Wait for the process done
-![alt text](imgs\image5.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image5.png?raw=true)
 Continue
-![alt text](imgs\image6.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image6.png?raw=true)
 ### Step-2 set-up Authentication
 In the left column, click **Build** tag then choose **Authentication** tag.
-![alt text](imgs\image7.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image7.png?raw=true)
 Click **Get started**
-![alt text](imgs\image8.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image8.png?raw=true)
 In tab Authentication/Sign-in method choose **Anonymous**. This option allow a anonymous user to access your Firebase resource. In the next section, i will introduce how to specify a user how can access the resource.
-![alt text](imgs\image9.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image9.png?raw=true)
 Enable and save the setting.
-![alt text](imgs\image10.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image10.png?raw=true)
 Oke.
-![alt text](imgs\image11.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image11.png?raw=true)
 ### Step-3 set-up Realtime Database
 Back to **build** tag, choose **Realtime Database** tag then **Create Database**.
-![alt text](imgs\image12.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image12.png?raw=true)
 Choose Database Center, there are some database centers for you to choose. I will choose ```us-cental1```.
-![alt text](imgs\image13.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image13.png?raw=true)
 Select ***Start in locked mode*** option, then click **Enable** :v
-![alt text](imgs\image14.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image14.png?raw=true)
 OKE.
-![alt text](imgs\image15.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image15.png?raw=true)
 ### Step-4 set-up Rules
 In tag Build/Realtime Database choose **Rules** tab. This tab allow you set rules for **read** or **write** operation to your resource. For example if you set ```".read": false``` ```false``` this rule will deny any **read** operation to your resource.
 <br>To access (R\W) to your resouce for anyone: 
@@ -46,7 +46,7 @@ In tag Build/Realtime Database choose **Rules** tab. This tab allow you set rule
   }
 }
 ```
-![alt text](imgs\image16.png)
+![alt text](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image16.png?raw=true)
 
 To access (R\W) to your resouce for a specified user using uid (optional): 
 ```
