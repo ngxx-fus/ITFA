@@ -3,14 +3,18 @@
 
 #include <Arduino.h>
 
+// Định nghĩa các macro cho các chân LED, DEV0, DEV1
 #define INDICATOR_LED_PIN 19
 #define DEV_0_PIN 12
 #define DEV_1_PIN 13
 
+// Định nghĩa STRUCT sensor_data để 
+// đóng gói dữ liệu trả về từ Firebase
 struct DEV{
     bool __0, __1;
 };
 
+// Hàm nháy LED theo mẫu để thông báo
 // Codes:
 // 0x0: Read data from sensor
 // 0x1: DHT Received data corrupted
@@ -34,6 +38,7 @@ void set_indicator(int err_code = 0){
   }
 }
 
+// Hàm khởi tạo các chân GPIO cho LED, DEV0, DEV1
 void gpio_init(){
     pinMode(INDICATOR_LED_PIN, OUTPUT);
     pinMode(DEV_0_PIN, OUTPUT);
