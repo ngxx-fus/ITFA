@@ -65,12 +65,12 @@ You have set-up your Realtime Firebase.
 Before go to Step-1, you must copy some credential informations.
 #### DATABASE_URL
 In tag Build/Realtime Database choose **Data** tab, then copy the URL.
-![inmg](.\imgs\image17.png)
+![inmg](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image17.png?raw=true)
 #### API_KEY
 From Project Overview tag, select ⚙️ then select **Project settings**
-![inmg](.\imgs\image18.png)
+![inmg](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image18.png?raw=true)
 At tab **General**, copy **Web API key**.
-![inmg](.\imgs\image19.png)
+![inmg](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image19.png?raw=true)
 (This API Key in the picture will be unusable :v bcz the project will be deleted after i make this guide.)
 
 ### Step-1 install dependencies (lib)
