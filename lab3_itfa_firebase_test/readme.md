@@ -1,3 +1,7 @@
+## Hardware Specs
+Board: DOIT ESP32 DEVKIT V1
+![pinout](imgs\board_pinout.png)
+
 ## How to setup RealtimeFirebase?
 You can set-up your FirebaseRealtime in serveral steps below:
 ### Step-0 Sign-up
