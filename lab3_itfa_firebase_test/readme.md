@@ -262,29 +262,39 @@ Result:
 ## Section-2 Specified user
 ### Step-1 Set-up Authentication
 Choose **Email/Password** privider.
-![img](imgs\image20.png)
-![img](imgs\image21.png)
-![img](imgs\image22.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image20.png?raw=true)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image21.png?raw=true)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image22.png?raw=true)
 
 ### Step-2 Create Email+Password
 Go to [Service Account Website](https://console.cloud.google.com/iam-admin/serviceaccounts). Select your project and continue.
-![img](imgs\image23.png)
-![img](imgs\image24.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image23.png?raw=true)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image24.png?raw=true)
 Enter name
-![img](imgs\image25.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image25.png?raw=true)
 Grant this service account access to YOUR_PROJECT so that it has permission to complete specific actions on the resources in your project
-![img](imgs\image26.png)
-![img](imgs\image27.png)
-![img](imgs\image28.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image26.png?raw=true)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image27.png?raw=true)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image28.png?raw=true)
 Copy your EMAIL ADDRESS!
-![img](imgs\image29.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image29.png?raw=true)
 Back to Authentication tag, Sign-up Method tab, click **Add user**
-![img](imgs\image30.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image30.png?raw=true)
 Using Email has been created before and create new password. This user only has Editor permition.
-![img](imgs\image31.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image31.png?raw=true)
 Done.
-![img](imgs\image32.png)
+![img](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_test/imgs/image32.png?raw=true)
+NOTE: Copy this UID :> (U will need it to set rule for only this user to access the resource).
 
+### Step-3 Set-up rule
+```
+{
+  "rules": {
+    ".read": "auth.uid === 'Wxkxj977qSdL9Fp9fYet20U6Rai2'",
+    ".write": "auth.uid === 'Wxkxj977qSdL9Fp9fYet20U6Rai2'"
+  }
+}
+```
 ### Step-3 Set-up in code
 To lazy to write more detail, research by yourself, gud luck.
 ```
@@ -371,7 +381,7 @@ void Initial_Firebase() {
 
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
-  
+
   auth.user.email = EMAIL;
   auth.user.password = PASSWORD;
 
