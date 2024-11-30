@@ -16,14 +16,7 @@
 #define EMAIL "itfa-name@lab3-itfa.iam.gserviceaccount.com"
 #define PASSWORD "nGXXFUS@3204"
 
-// #define DATABASE_URL "https://this-is-a-test-a0f7d-default-rtdb.firebaseio.com/"
-// #define API_KEY "AIzaSyDNSbmHmGsDEip7-m6zFJKe9TZ5d56bjDs"
-// #define EMAIL "hehe-470@this-is-a-test-a0f7d.iam.gserviceaccount.com"
-// #define PASSWORD "nGXXFUS@3204"
-
 #include "FirebaseESP32.h"
-#include "addons/TokenHelper.h"
-#include "addons/RTDBHelper.h"
 
 FirebaseData firebaseData;
 FirebaseAuth auth;
