@@ -60,6 +60,10 @@ To access (R\W) to your resouce for a specified user using uid (optional):
 ### Step-5 Done
 You have set-up your Realtime Firebase.
 
+
+
+
+
 ## How to push a data from ESP32 to the Realtime Firebase you have set-up?
 ### Step-0 Get Firebase Credentials
 Before go to Step-1, you must copy some credential informations.
@@ -158,19 +162,42 @@ Next, set value for ```config``` object:
 config.api_key = API_KEY;
 config.database_url = DATABASE_URL;
 ```
-Sign-in to Firebase using ```Firebase.signUp```, this method return ```true``` if the connection is successful, ```false``` otherwise.
+Sign-up to Firebase using ```Firebase.signUp```, this method return ```true``` if the progress is successful, ```false``` otherwise.
 ```
 Firebase.signUp(&config, &auth, "", "");
 ```
-After signed-in, Firebase will sendback the token stored in ```tokenStatusCallback```, you need set this token into **config** object.
+You can log the error by print this code (using Serial.printlin(), ....):
+```
+config.signer.signupError.message.c_str()
+```
+After signed-up, Firebase will sendback the token stored in ```tokenStatusCallback```, you need set this token into **config** object.
 ```
 config.token_status_callback = tokenStatusCallback;
 ```
-Then start Firebase
+Then start Firebase. For each time you reset, upload, ... this stuff will create an anonymous user :> (In next section i will introduce how to use ```Sign-in Method```/```Email/Password``` provider.)
 ```
 Firebase.begin(&config, &auth);
 ```
 One more step, set auto-connect Wi-Fi
 ```
 Firebase.reconnectWiFi(true);
+```
+
+#### Data pushing
+In this guide (until now), i only introduce how to push data from ESP32 into Realtime Database. To push data, you can use ```set``` method. This method return ```true``` if success, ```false``` otherwise.
+
+
+With String:
+```
+Firebase.setString(firebaseData, "path/", "string value")
+```
+With int:
+```
+Firebase.setInt(firebaseData, "/path", 23)
+```
+And so on with other datatype.
+
+## Full code (Simple Version)
+```
+
 ```

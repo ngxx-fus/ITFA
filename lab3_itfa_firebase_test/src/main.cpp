@@ -53,7 +53,9 @@ void setup(){
     auth.user.password = PASSWORD;
 
     Firebase.signUp(&config, &auth, "", "");
-
+    
+    config.token_status_callback = tokenStatusCallback;
+    
     Firebase.begin(&config, &auth);
 
     Firebase.reconnectWiFi(true);
@@ -69,4 +71,5 @@ void loop(){
     delay(1000);
     if(!Firebase.setString(firebaseData, "TEST_ADDR", "TEST_VALUE"))
         Serial.println("Uload: e");
+    Firebase.setInt(firebaseData, "/path", 23)
 }
