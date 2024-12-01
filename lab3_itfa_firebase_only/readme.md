@@ -207,54 +207,107 @@ And so on with other datatype.
 
 ## Full code (Simple Version)
 ```
-#include <Arduino.h>
+    #include <Arduino.h>
 
-#define WIFI_SSID "rm.note.11"
-#define WIFI_PWD "nGXXFUS@3204"
-#include "WiFi.h"
+    #include <DHT.h>
+    #define DHT_DAT_PIN 5
+    #define DHTTYPE DHT22
+    DHT dht(DHT_DAT_PIN, DHTTYPE);
 
-#define DATABASE_URL "https://this-is-a-test-a0f7d-default-rtdb.firebaseio.com/"
-#define API_KEY "AIzaSyDNSbmHmGsDEip7-m6zFJKe9TZ5d56bjDs"
+    #define WIFI_SSID "Wokwi-GUEST"
+    #define WIFI_PWD ""
+    #include "WiFi.h"
 
-#include "FirebaseESP32.h"
-#include "addons/TokenHelper.h"
-#include "addons/RTDBHelper.h"
+    #define DATABASE_URL "https://this-is-a-test-bfe07-default-rtdb.firebaseio.com/"
+    #define API_KEY "AIzaSyDh67--DNpFfOJj9YlGJQA9eeIXKassYyA"
 
-FirebaseData firebaseData;
-FirebaseAuth auth;
-FirebaseConfig config;
+    #include "FirebaseESP32.h"
+    #include "addons/TokenHelper.h"
+    #include "addons/RTDBHelper.h"
+
+    FirebaseData firebaseData;
+    FirebaseAuth auth;
+    FirebaseConfig config;
 
 
-void setup(){
-    Serial.begin(115200);
-    Serial.println("Hello from ESP32!");
+    void setup(){
+        Serial.begin(115200);
+        Serial.println("Hello from ESP32!");
 
-    WiFi.begin(WIFI_SSID, WIFI_PWD);
+        Serial.println("WiFi: Connecting...");
+        WiFi.begin(WIFI_SSID, WIFI_PWD);
+        delay(5000);
+        while(WiFi.status() != WL_CONNECTED){
+            Serial.println("WiFi: No connection!");
+            Serial.println("WiFi: Retry to connect...");
+            delay(5000);
+            WiFi.begin(WIFI_SSID, WIFI_PWD);
+        }
+        Serial.println("WiFi: OK!\n");
 
-    config.api_key = API_KEY;
-    config.database_url = DATABASE_URL;
 
-    Firebase.signUp(&config, &auth, "", "");
-    
-    config.token_status_callback = tokenStatusCallback;
-    
-    Firebase.begin(&config, &auth);
+        Serial.println("Firebase: Config API_KEY & DATABASE_URL...");
+        config.api_key = API_KEY;
+        config.database_url = DATABASE_URL;
+        Serial.println("Firebase: OK!");
 
-    Firebase.reconnectWiFi(true);
+        Serial.println("Firebase: Signing-up...");
+        while( !Firebase.signUp(&config, &auth, "", "") ){
+            Serial.println("Firebase: Sign-in failed, E:");
+            Serial.println(config.signer.signupError.message.c_str());
+            Serial.println("Firebase: Re-try to signing-up...");
+            delay(5000);
+        }
+        Serial.println("Firebase: OK!");
+        
+        Serial.println("Firebase: Config send back token...");
+        config.token_status_callback = tokenStatusCallback;
+        Serial.println("Firebase: OK!");
 
-    //TEST
-    Serial.printf(config.signer.signupError.message.c_str());
-    Serial.printf("Setup done!");
+        Serial.println("Firebase: Begining...");
+        Firebase.begin(&config, &auth);
 
-}
+        while (!Firebase.ready()){
+            Serial.println("Firebase: Re-try to connect...");
+            delay(5000);
+            Firebase.begin(&config, &auth);
+        }
+        Serial.println("Firebase: OK!");
+        
+        Serial.println("Firebase: Auto reconnect Wi-Fi!");
+        Firebase.reconnectWiFi(true);
 
-void loop(){
-    Serial.printf("loading");
-    delay(1000);
-    if(!Firebase.setString(firebaseData, "TEST_ADDR", "TEST_VALUE"))
-        Serial.println("Uload: e");
-}
+        Serial.println("\nAll setup are done!\n");
+    }
+
+    void loop(){
+        delay(5000);
+
+        float t, h;
+        t = dht.readTemperature(), h = dht.readHumidity();
+
+        if(isnan(t) || isnan(h))
+            Serial.println("SensorData: Corrupted! --> Upload aborted!");
+
+        String msg;
+        msg = "Temp: "; msg+=String(t); msg+=" oC"; 
+        Serial.println(msg);
+        msg = "Humid: "; msg+=String(h); msg+=" %"; 
+        Serial.println(msg);
+
+        bool UploadTempOK, UploadHumidOK;
+
+        UploadTempOK = Firebase.setString(firebaseData, "Temp", String(t));
+        UploadHumidOK = Firebase.setString(firebaseData, "Humid", String(h));
+
+        if(!UploadTempOK)
+            Serial.println("Firebase: Failed to upload Humid data!");
+        if(!UploadHumidOK )
+            Serial.println("Firebase: Failed to upload Temp data!");
+    }
 ```
+
+Note: If you got "ADMIN_ONLY_OPERATION" error -----> check Authentication :>
 
 Result:
 ![res](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_only/imgs/demo.png?raw=true)
