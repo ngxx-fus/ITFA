@@ -12,7 +12,7 @@
     #include "WiFi.h"
 
     #define IO_USERNAME  "ngxxfus"
-    #define IO_KEY       "******"
+    #define IO_KEY       "aio_HVyt0611wujP9WJp7fM1wCftD0fh"
     #include <AdafruitIO.h>
     #include <AdafruitIO_WiFi.h> 
 
