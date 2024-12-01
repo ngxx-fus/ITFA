@@ -221,7 +221,10 @@ And so on with other datatype.
     #define DATABASE_URL "https://this-is-a-test-bfe07-default-rtdb.firebaseio.com/"
     #define API_KEY "AIzaSyDh67--DNpFfOJj9YlGJQA9eeIXKassYyA"
 
+    // For communicate with Firebase
     #include "FirebaseESP32.h"
+    // For <Authentication/Sign-in method/Anonymous> only.
+    // To get sendback token after send Signup request.
     #include "addons/TokenHelper.h"
     #include "addons/RTDBHelper.h"
 
@@ -305,12 +308,17 @@ And so on with other datatype.
         if(!UploadHumidOK )
             Serial.println("Firebase: Failed to upload Temp data!");
     }
+
 ```
 
 Note: If you got "ADMIN_ONLY_OPERATION" error -----> check Authentication :>
 
 Result:
 ![res](https://github.com/ngxx-fus/ITFA/blob/main/lab3_itfa_firebase_only/imgs/demo.png?raw=true)
+
+
+
+
 
 ## Section-2 Specified user
 ### Step-1 Set-up Authentication
