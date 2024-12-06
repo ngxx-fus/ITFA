@@ -88,65 +88,62 @@ bool firebase_upload(SENSOR_DATA data){
     uint8_t STATUS = 0;
     // Nếu gởi dữ liệu thành công, phương thức setString() của Firebase sẽ trả
     // về true, ngược lại false
-    STATUS += Firebase.setString(firebaseData, "Temp", String(data.temp)) * 0x1;
-    STATUS += Firebase.setString(firebaseData, "Humid", String(data.humid)) * 0x2;
+    STATUS += Firebase.setString(firebaseData, "ESP32/Temp", String(data.temp)) * 0x1;
+    STATUS += Firebase.setString(firebaseData, "ESP32/Humid", String(data.humid)) * 0x2;
     // Thông báo mã lỗi nếu có
     if(STATUS&0x1 == 0) msg2ser("Thingspeak: Upload Temp feiled!");
     if(STATUS&0x2 == 0) msg2ser("Thingspeak: Upload Humud feiled!");
     return bool(STATUS==3);
 }
 
-uint8_t firebase_download(bool* dev0, bool* dev1){
+bool firebase_download(bool* dev0, bool* dev1){
     uint8_t success = 0;
-    if(Firebase.getString(firebaseData, "DEV0")){
+    static char strON[] = {'\\', '"', 'O', 'N', '\\', '"', '\0'};
+    if(Firebase.getString(firebaseData, "ESP32/DEV0")){
         if(firebaseData.dataType() == "string"){
-            success += 1;
-            *dev0 = bool(firebaseData.stringData()== "ON");
+            firebaseData.stringData() == String(strON)?
+            *dev0 = 1, success += 1 :
+            *dev0 = 0, success += 1;
         }else
             msg2ser("Firebase: Get DEV0: Error type!");
     }else
         msg2ser("Firebase: Get DEV0: Failed!");
     
-    if(Firebase.getString(firebaseData, "DEV1")){
+    if(Firebase.getString(firebaseData, "ESP32/DEV1")){
         if(firebaseData.dataType() == "string"){
-            *dev1 = bool(firebaseData.stringData()== "ON");
-            success += 2;
+            firebaseData.stringData() == String(strON)?
+            *dev1 = 1, success += 2 :
+            *dev1 = 0, success += 2;
         }
         else
             msg2ser("Firebase: Get DEV1: Error type!");
     }else
         msg2ser("Firebase: Get DEV1: Failed!");
-    
-    return success;
+    return (success - 3) == 0;
 }
 
 //-------------- Thingspeak --------------//
-// Định nghĩa hàm thiết lập kết nối với ThingSpeak
 void thingspeak_init(){
     msg2ser("Connecting to Thingspeak...");
-    // Kết nối tới thingspeak
     ThingSpeak.begin(client);  
-    // Thử truy vấn 1 giá trị ở field_1 để kiểm tra kết nối tới thingspeak.
     ThingSpeak.readLongField(CHANNEL_ID, 1, READ_API_KEY);
     ThingSpeak.getLastReadStatus();
     while(ThingSpeak.getLastReadStatus() != 200){
-        // Nếu mã trả về khác 200 thì không thành công
         msg2ser("Connecting to Thingspeak...");
         delay(2000);
     }
-    // Thông báo kết nối với thingspeak thành công
     msg2ser("Connected to Thingspeak!");
 }
 
-// Gởi dữ liệu đến thingspeak
-uint8_t thingspeak_upload(SENSOR_DATA data){
-    uint8_t STATUS = 0;
-    // Thông qua phương thức writeField của ThingSpeak.
-    STATUS += uint8_t(ThingSpeak.writeField(CHANNEL_ID, 1, data.temp, WRITE_API_KEY) == 200)*1;
-    STATUS += uint8_t(ThingSpeak.writeField(CHANNEL_ID, 2, data.humid, WRITE_API_KEY) != 200)*2;
-    // Thông báo lỗi nếu có
-    if(STATUS&0x1 == 0) msg2ser("Thingspeak: Upload Temp feiled!");
-    if(STATUS&0x2 == 0) msg2ser("Thingspeak: Upload Humud feiled!");
+bool thingspeak_upload(SENSOR_DATA data){
+    bool STATUS = true;
+    ThingSpeak.setField(1, data.temp);
+    ThingSpeak.setField(2, data.humid);
+    auto rcv_code = ThingSpeak.writeFields(CHANNEL_ID, WRITE_API_KEY);
+    if(bool(rcv_code != 200)){
+        msg2ser("Thingspeak: Upload: Failed! ","CODE: ", String(rcv_code));
+        STATUS = false;
+    }
     return STATUS;
 }
 

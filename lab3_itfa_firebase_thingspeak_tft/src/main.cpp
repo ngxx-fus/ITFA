@@ -5,11 +5,7 @@
 #include "firebase_thingspeak_def.h"
 #include "TFT_176x220.h"
 
-void Hello(){
-    tft.drawGFXText(3, 15, "Hello ;>", 0x46f0);
-    tft.drawGFXText(3, 30, "from ngxxfus!", 0x46f0);
-    delay(2000);
-}
+unsigned long lastcheck = 0;
 
 void setup(){
     tft_initial();
@@ -26,8 +22,9 @@ void setup(){
     drawline(line5, String(" ThingSpeak:OK"), 0x46f0);
 }
 
+
 void loop(){
-    SENSOR_DATA data = dht_read(3000);
+    auto data = dht_read(3000);
     msg2ser("Temp :", (String)data.temp);
     msg2ser("Humid :", (String)data.humid);
     tft.clear();
@@ -39,21 +36,26 @@ void loop(){
     drawline(line1, String(" Temp:  ") + String(data.temp), 0x46f0);
     drawline(line2, String(" Humid: ") + String(data.humid), 0x46f0);
 
-
     drawline(line3, String("Upload info:"), 0x46f0);
-    firebase_upload(data)?
-    drawline(line4, String(" Firebase   OK"), 0x46f0):
-    drawline(line4, String(" Firebase   :("), 0x46f0);
+    if( lastcheck - millis() > 5000UL){
+        lastcheck = millis();
+        firebase_upload(data)?
+        drawline(line4, String(" Firebase   OK"), 0x46f0):
+        drawline(line4, String(" Firebase   :<"), 0x46f0);
 
-    thingspeak_upload(data) == 3?
-    drawline(line5, String(" ThingSpeak OK"), 0x46f0):
-    drawline(line5, String(" ThingSpeak :("), 0x46f0);
+        thingspeak_upload(data)?
+        drawline(line5, String(" ThingSpeak OK"), 0x46f0):
+        drawline(line5, String(" ThingSpeak :<"), 0x46f0);
+    }else{
+        drawline(line4, String(" Firebase   x"), 0x46f0);
+        drawline(line5, String(" ThingSpeak x"), 0x46f0);
+    }
 
     drawline(line6, String("Download info:"), 0x46f0);
     bool dev0_state, dev1_state;
-    firebase_download(&dev0_state, &dev1_state) == 3?
+    firebase_download(&dev0_state, &dev1_state)?
     drawline(line7, String("Firebase OK"), 0x46f0):
-    drawline(line7, String("Firebase :("), 0x46f0);
+    drawline(line7, String("Firebase :<"), 0x46f0);
 
     drawline(line8, String("Dev info:"), 0x46f0);
     drawline(line9, String(" DEV0: ")+String(dev0_state?"ON":"OFF"), 0x46f0);
@@ -61,7 +63,5 @@ void loop(){
 
     digitalWrite(DEV_0_PIN, dev0_state);
     digitalWrite(DEV_1_PIN, dev1_state);
-
-    delay(2000);
 }
 
