@@ -24,7 +24,7 @@ void setup(){
 
 
 void loop(){
-    auto data = dht_read(3000);
+    auto data = dht_read(1000);
     msg2ser("Temp :", (String)data.temp);
     msg2ser("Humid :", (String)data.humid);
     tft.clear();
@@ -37,7 +37,7 @@ void loop(){
     drawline(line2, String(" Humid: ") + String(data.humid), 0x46f0);
 
     drawline(line3, String("Upload info:"), 0x46f0);
-    if( lastcheck - millis() > 5000UL){
+    if( millis() - lastcheck > 15000UL){
         lastcheck = millis();
         firebase_upload(data)?
         drawline(line4, String(" Firebase   OK"), 0x46f0):

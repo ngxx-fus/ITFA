@@ -101,9 +101,9 @@ bool firebase_download(bool* dev0, bool* dev1){
     static char strON[] = {'\\', '"', 'O', 'N', '\\', '"', '\0'};
     if(Firebase.getString(firebaseData, "ESP32/DEV0")){
         if(firebaseData.dataType() == "string"){
+            success += 1;
             firebaseData.stringData() == String(strON)?
-            *dev0 = 1, success += 1 :
-            *dev0 = 0, success += 1;
+            *dev0 = 1:  *dev0 = 0;
         }else
             msg2ser("Firebase: Get DEV0: Error type!");
     }else
@@ -111,15 +111,15 @@ bool firebase_download(bool* dev0, bool* dev1){
     
     if(Firebase.getString(firebaseData, "ESP32/DEV1")){
         if(firebaseData.dataType() == "string"){
+            success += 2;
             firebaseData.stringData() == String(strON)?
-            *dev1 = 1, success += 2 :
-            *dev1 = 0, success += 2;
+            *dev1 = 1:*dev1 = 0;
         }
         else
             msg2ser("Firebase: Get DEV1: Error type!");
     }else
         msg2ser("Firebase: Get DEV1: Failed!");
-    return (success - 3) == 0;
+    return (success == 3);
 }
 
 //-------------- Thingspeak --------------//
