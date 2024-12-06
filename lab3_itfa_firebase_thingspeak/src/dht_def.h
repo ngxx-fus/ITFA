@@ -9,7 +9,7 @@
 // Định nghĩa macro cho chân nhận dữ liệu từ cảm biến
 #define DHT_DAT_PIN 5
 // Định nghĩa macro cho kiểu DHT
-#define DHTTYPE DHT22
+#define DHTTYPE DHT11
 
 // Tạo đối tượng DHT
 DHT dht(DHT_DAT_PIN, DHTTYPE);

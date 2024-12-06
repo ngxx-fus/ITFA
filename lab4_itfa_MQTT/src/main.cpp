@@ -52,9 +52,9 @@
             io.connect();
             delay(1000);
         }
-
         msg2ser("Adafruit: Setting-up handleMsg...\n");
 
+        msg2ser("Adafruit: Setting-up handleMsg...\n");
         DEV0->get();
         DEV0->onMessage([](AdafruitIO_Data *data){
                 digitalWrite(DEV_0_PIN, data->toPinLevel());

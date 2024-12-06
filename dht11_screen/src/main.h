@@ -1,24 +1,11 @@
-#include "SPI.h"
-#include "TFT_22_ILI9225.h"
 #include <DHT.h>
+#include "TFT_176x220.h"
+
+#define INDICATOR_LED_PIN 25
 
 #define DHTTYPE DHT11
-#define DHT_DAT_PIN 32
-#define INDICATOR_LED_PIN 26
-
-#if defined ESP32
-#pragma warning("Using built-in SPI for ESP32!")
-#define TFT_RST 21 
-#define TFT_RS  22 
-#define TFT_CLK 18  
-#define TFT_SDI 23  
-#define TFT_CS  5  
-#define TFT_LED 0   
-SPIClass vspi(VSPI);
-#define TFT_BRIGHTNESS 200 
-#endif
+#define DHT_DAT_PIN 5
 DHT dht(DHT_DAT_PIN, DHTTYPE);
-TFT_22_ILI9225 tft = TFT_22_ILI9225(TFT_RST, TFT_RS, TFT_CS, TFT_LED, TFT_BRIGHTNESS);
 
 
 // Codes:
@@ -52,4 +39,31 @@ void Initial_GPIO_Pin(){
 void Initial_Serial(){
   Serial.begin(115200);
   Serial.println(("\n\nHello!\nFrom MEOW GROUP!"));
+}
+
+void Initial_DHT(){
+  dht.begin();
+}
+
+void Update_Sensor_Data(float* ph = nullptr, float* pt = nullptr){
+    Serial.println();
+    Set_Indicator_Flag(0x0);
+    delay(4000);
+    float h = dht.readHumidity();
+    float t = dht.readTemperature();
+    // Check read data
+    if( isnan(t) || isnan(h) ){
+            // Send Error msg to serial
+            Serial.println("DHT11 - E: Corrupted data!");
+            Set_Indicator_Flag(0x1);
+        }else{
+        // Send Temp + Humid data to serial
+        Serial.print("Temp: ");
+        Serial.println(t);
+        Serial.print("Humid: ");
+        Serial.println(h);
+        // update temp, humid into ptr
+        (ph==nullptr)?(0):(*ph=h);
+        (pt==nullptr)?(0):(*pt=t);
+    }
 }

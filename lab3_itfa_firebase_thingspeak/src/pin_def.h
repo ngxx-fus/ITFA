@@ -4,9 +4,9 @@
 #include <Arduino.h>
 
 // Định nghĩa các macro cho các chân LED, DEV0, DEV1
-#define INDICATOR_LED_PIN 19
-#define DEV_0_PIN 12
-#define DEV_1_PIN 13
+#define INDICATOR_LED_PIN 25
+#define DEV_0_PIN 26
+#define DEV_1_PIN 27
 
 // Định nghĩa STRUCT sensor_data để 
 // đóng gói dữ liệu trả về từ Firebase

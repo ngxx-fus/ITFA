@@ -1,43 +1,36 @@
 #include "main.h"
- 
-void TFT_Screen(){
-    // Serial.println("Called: TFT_Screen");
-    Set_Indicator_Flag();
-    tft.clear();
-    tft.fillCircle(50,50 , 15, 0x3452);
-    tft.drawTriangle(30,30, 130,0, 0,130, 0xFFFF);
-}
+#define blank_line "               "
 
-void Update_Sensor_Data(){
-    Serial.println();
-    Set_Indicator_Flag(0x0);
-    delay(4000);
-    float h = dht.readHumidity();
-    float t = dht.readTemperature();
-    // Check read data
-    if( isnan(t) || isnan(h) ){
-            // Send Error msg to serial
-            Serial.println("DHT11 - E: Corrupted data!");
-            Set_Indicator_Flag(0x1);
-        }else{
-        // Send Temp + Humid data to serial
-        Serial.print("Temp: ");
-        Serial.println(t);
-        Serial.print("Humid: ");
-        Serial.println(h);
-    }
+#define clearline(Line) tft.drawGFXText(3, Line, blank_line, 0x0)
+#define drawline(Line, Text, Color) tft.drawGFXText(3, Line, (Text), Color)
+
+void Hello(){
+    tft.drawGFXText(3, 15, "Hello ;>", 0x46f0);
+    tft.drawGFXText(3, 30, "from ngxxfus!", 0x46f0);
+    delay(2000);
 }
 
 void setup() {
     Initial_Serial();
     Initial_GPIO_Pin();
-    vspi.begin();
-    tft.begin(vspi);
-    tft.begin(vspi);
+    Initial_DHT();
+    Initial_TFT();
+    Hello();
 }
 
 void loop() {
-    TFT_Screen();
-    // delay(1000);
+    Set_Indicator_Flag(0x0);
+    float h = 0, t = 0;
+    Update_Sensor_Data(&h, &t);
+    tft.clear();
+    drawline(line0, String("Connections: "), 0x46f0);
+    drawline(line1, String(" Firebase:  OK"), 0x46f0);
+    drawline(line2, String(" ThingSpeak:OK"), 0x46f0);
+    drawline(line3, String("Env info:"), 0x46f0);
+    drawline(line4, String(" Temp:  ")+String(t), 0x46f0);
+    drawline(line5, String(" Humid: ")+String(h), 0x46f0);
+    drawline(line0, String("Connections: "), 0x46f0);
+
+    delay(5000);
 }
 

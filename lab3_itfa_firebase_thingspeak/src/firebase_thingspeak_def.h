@@ -7,8 +7,8 @@
 #include "serial_def.h"
 
 // Định nghĩa các macro cho SSID và PW của Wi-Fi
-#define WIFI_SSID "Wokwi-GUEST"
-#define WIFI_PWD ""
+#define WIFI_SSID "rm.note.11"
+#define WIFI_PWD "nGXXFUS@3204"
 // Thư viện Wi-Fi
 #include "WiFi.h"
 
@@ -58,7 +58,7 @@ void wifi_init(){
     WiFi.begin(WIFI_SSID, WIFI_PWD);
     do{
         msg2ser("Connecting to Wi-fi...");
-        delay(2000);
+        delay(5000);
     }while(!is_connected_to_wifi());
     msg2ser("Connected to Wi-fi!");
 }

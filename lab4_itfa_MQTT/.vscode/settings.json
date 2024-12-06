@@ -3,5 +3,6 @@
         "*.c": "c",
         "*.cpp": "cpp",
         "cmath": "cpp"
-    }
+    },
+    "editor.fontLigatures": true
 }
