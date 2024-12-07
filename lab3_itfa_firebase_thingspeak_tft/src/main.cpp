@@ -24,7 +24,7 @@ void setup(){
 
 
 void loop(){
-    auto data = dht_read(1000);
+    auto data = dht_read(2000);
     msg2ser("Temp :", (String)data.temp);
     msg2ser("Humid :", (String)data.humid);
     tft.clear();
