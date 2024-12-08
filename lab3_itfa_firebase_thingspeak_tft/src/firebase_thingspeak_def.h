@@ -132,7 +132,7 @@ void thingspeak_init(){
         msg2ser("Connecting to Thingspeak...");
         delay(2000);
     }
-    msg2ser("Connected to Thingspeak!");
+    m5sg2ser("Connected to Thingspeak!");
 }
 
 bool thingspeak_upload(SENSOR_DATA data){
