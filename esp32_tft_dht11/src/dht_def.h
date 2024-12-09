@@ -44,7 +44,9 @@
     "\n        adafruit/Adafruit Unified Sensor@^1.1.14"         \
                                                                  \
     "\nThe definitions:"                                         \
-    "\n    #define DHT_SDA " value_of(DHT_SDA) "\n    #define DHT_TYPE " value_of(DHT_TYPE))
+    "\n    #define DHT_SDA " value_of(DHT_SDA)                   \
+    "\n    #define DHT_TYPE " value_of(DHT_TYPE)                 \
+)
 
 namespace dht_sensor{
 

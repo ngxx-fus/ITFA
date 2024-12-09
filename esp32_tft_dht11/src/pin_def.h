@@ -8,10 +8,11 @@
     "\nHello from ngxxfus,"                                   \
     "\n    This header file was made for quick blink LED,"    \
     "\nsplit all setup command into modules, this module for" \
-    "\nset-up all things related to GPIO (I/O devices only!).")
+    "\nset-up all things related to GPIO (I/O devices only!)."\
+)
 
-#define INDICATOR_LED 25
-#define DEV_0 26
+#define INDICATOR_LED 26
+#define DEV_0 25
 #define DEV_1 27
 
 namespace io_pin

@@ -9,7 +9,8 @@
     "\nnotes and functions :v. If you got some errors... Example:"  \
     "\nYou have received a lot of \'weird\' char in your Serial-"   \
     "\nmonitor, you need check the baud-rate (by default, it's"     \
-    "\n9600).")
+    "\n9600)."\
+)
 
 namespace serial_com
 {
