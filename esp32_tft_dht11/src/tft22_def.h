@@ -61,6 +61,25 @@ namespace tft_lcd{
         tft.setOrientation(Orientation);
     }
 
+    // Draw an black rec onto TFT 2.2" screen.
+    // Note:
+    // - line         : 0 ->... (row)
+    // - line_height  : 0->...
+    // - line+line_height < 220
+    void clearln(
+        uint16_t line, 
+        uint16_t line_height = 0xf
+        uint16_t filled_color = 0x0
+    ){
+        for(uint16_t x = 0; x < 176; ++x)
+            for(uint16_t y = (line+1)*line_height+1; y > line*line_height+1; --y)
+                tft.drawPixel(x, y, filled_color);
+    }
+
+    inline void clear(){
+        tft.clear();
+    }
+
     //Print msg into a line in tft screen.
     //Note: 
     //+ The limit range of row: [0, 180/line_height]
@@ -88,35 +107,19 @@ namespace tft_lcd{
     void drawImage(
         uint16_t X, uint16_t Y, 
         uint16_t* image, 
+        uint16_t img_x = 0, uint16_t img_y = 0,
         uint16_t img_w = 176, uint16_t img_h = 220
     ){
-        if( X >= tft.maxX() || Y >= tft.maxY() ||\
-            img_w > 176     || img_h > 220
+        if( X >= tft.maxX() || Y >= tft.maxY()  ||\
+            img_w > 176     || img_h > 220      ||\
+            img_w < img_x+X  || img_h < img_y+Y
         ) return; 
 
-        for(uint16_t x = 0; x < img_w-X; ++x){
-            for(uint16_t y = 0; y < img_h-Y; ++y){
-                tft_lcd::tft.drawPixel(X+x, Y+y, image[(y)*img_w+(x)]);
+        for(uint16_t x = 0; x < img_w-img_x-X; ++x){
+            for(uint16_t y = 0; y < img_h-img_x-Y; ++y){
+                tft.drawPixel(X+x, Y+y, image[(y+img_y)*img_w+(x+img_x)]);
             }
         }
-    }
-
-    // Draw an black rec onto TFT 2.2" screen.
-    // Note:
-    // - line         : 0 ->... (row)
-    // - line_height  : 0->...
-    // - line+line_height < 220
-    void clearln(
-        uint16_t line, 
-        uint16_t line_height = 0x000f
-    ){
-        for(uint16_t x = 0; x < 176; ++x)
-            for(uint16_t y = (line+1)*line_height+1; y > line*line_height+1; --y)
-                tft.drawPixel(x, y, 0x0);
-    }
-
-    inline void clear(){
-        tft.clear();
     }
 }
 
