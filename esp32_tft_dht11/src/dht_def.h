@@ -4,26 +4,26 @@
 #include <Arduino.h>
 
 #if !defined(string_of) && !defined(value_of)
-#define string_of(x) #x
-#define value_of(x) string_of(x)
+    #define string_of(x) #x
+    #define value_of(x) string_of(x)
 #endif
 
 #ifdef _PIN_DEF_H_
 #include "pin_def.h"
-#ifndef INDICATOR_EXISTED
-#define INDICATOR_EXISTED true
-#endif
+    #ifndef INDICATOR_EXISTED
+        #define INDICATOR_EXISTED true
+    #endif
 #else
-#define INDICATOR_EXISTED false
+    #define INDICATOR_EXISTED false
 #endif
 
 #ifdef _SERIAL_DEF_H_
-#include "serial_def.h"
-#ifndef STATUS_LOG
-#define STATUS_LOG true
-#endif
+    #include "serial_def.h"
+    #ifndef STATUS_LOG
+        #define STATUS_LOG true
+    #endif
 #else
-#define STATUS_LOG false
+    #define STATUS_LOG false
 #endif
 
 #include <DHT.h>
@@ -74,6 +74,9 @@ namespace dht_sensor{
 
     void read(float &temperature, float &humidity, uint16_t delay_ms = 2000)
     {
+        #if INDICATOR_EXISTED == true
+                io_pin::set_indicator(0x0);
+        #endif
         delay(delay_ms);
         temperature = dht.readTemperature(),
         humidity = dht.readHumidity();

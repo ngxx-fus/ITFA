@@ -12,40 +12,20 @@
 )
 
 #define INDICATOR_LED 26
-#define DEV_0 25
-#define DEV_1 27
+/// #define DEV_0 25
+/// #define DEV_1 27
 
 namespace io_pin
 {
-    // Codes:
-    // 0x0: Normal operation :v
-    // 0x1: DHT Received data corrupted
-    // 0x2: WiFi error
-    // 0x3: Database connection error
-    // 0x4: Speed direction error
+    /// Blink led to indicate error.
+    /// \param err_code error code
+    /// \note Based on your rule about error, in this function, 
+    /// the Value(err_code) is the number of times the LED will be "blink".
+    /// For each "blink" period, the led will be turned off for 50ms 
+    /// then on 200ms then off 50ms.
     void set_indicator(int err_code = 0)
     {
-        // Blink led to noti error
-        switch (err_code)
-        {
-        case 0x0:
-            err_code = 1;
-            break;
-        case 0x1:
-            err_code = 2;
-            break;
-        case 0x2:
-            err_code = 3;
-            break;
-        case 0x3:
-            err_code = 4;
-            break;
-        case 0x4:
-            err_code = 5;
-            break;
-        default:
-            err_code = 0;
-        }
+        ++err_code;
         while (err_code--)
         {
             digitalWrite(INDICATOR_LED, LOW);
@@ -60,8 +40,6 @@ namespace io_pin
     void init()
     {
         pinMode(INDICATOR_LED, OUTPUT);
-        pinMode(DEV_0, OUTPUT);
-        pinMode(DEV_1, OUTPUT);
         io_pin::set_indicator(0x0);
     }
 }
